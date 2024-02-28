@@ -6,6 +6,34 @@
         <title>Rock Paper Scissors</title>
     </head>
     <body>
+        <div class="start_container">
+            <div class="welcome">
+                <h1>Welcome to</h1>
+                <h1>Rock Paper Scissors</h1>
+                <button id="start">START</button>
+            </div>
+
+            <div class="game_container">
+                <div class="scores">
+                    <p>Computer Score: <span id="computer-score">0</span></p>
+                    <p>Round: <span id="round-counter">5</span></p>
+                    <p>Player Score: <span id="player-score">0</span></p>
+                </div>
+                <div class="select">
+                    <button id="rock">ROCK</button>
+                    <button id="paper">PAPER</button>
+                    <button id="scissors">SCISSORS</button>
+                </div>
+                <div class="report">
+                    <p id="round-report"></p>
+                </div>
+            </div>
+
+            <div class="final">
+                <p id="final-report"></p>
+                <button id="new-game">Play Again</button>
+            </div>
+        </div>
         <script src="./script.js"></script>
     </body>
 </html>

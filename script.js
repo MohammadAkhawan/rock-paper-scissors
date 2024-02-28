@@ -1,113 +1,162 @@
-let playerScore = 0;
-let computerScore = 0;
+const bodyElement = document.querySelector("body");
 
-const getComputerChoice = () => {
+const startContainerElement = document.querySelector(".start_container");
+
+const welcomeSectionElement = document.querySelector(".welcome");
+
+const gameContainerElement = document.querySelector(".game_container");
+const scoresSectionElement = document.querySelector("#scores");
+const selectSectionContainer = document.querySelector(".select");
+const rockBtnElement = document.querySelector("#rock");
+const paperBtnElement = document.querySelector("#paper");
+const scissorsBtnElement = document.querySelector("#scissors");
+const computerScoreElement = document.querySelector("#computer-score");
+const roundCounterElement = document.querySelector("#round-counter");
+const playerScoreElement = document.querySelector("#player-score");
+const roundReportElement = document.querySelector("#round-report");
+
+const finalSectionElement = document.querySelector(".final");
+const finalReportElement = document.querySelector("#final-report");
+const tryAgainBtnElement = document.querySelector("#new-game");
+
+let computerScore = 0;
+let playerScore = 0;
+let roundCounter = 5;
+
+startContainerElement.removeChild(gameContainerElement);
+startContainerElement.removeChild(finalSectionElement);
+
+const startBtnElement = document.querySelector("#start");
+
+const makeRandomChoice = () => {
     const randomNumber = Math.floor(Math.random() * 3) + 1;
-    let computerChoice;
     switch (randomNumber) {
         case 1:
-            computerChoice = "rock";
-            break;
+            return "rock";
         case 2:
-            computerChoice = "paper";
-            break;
-        default:
-            computerChoice = "scissors";
-            break;
-    }
-    return computerChoice;
-};
-
-const singleRound = (computerSelection, playerSelection) => {
-    switch (true) {
-        case playerSelection === "rock" && computerSelection === "paper":
-            computerScore++;
-            alert(`${computerSelection} beats ${playerSelection}, You loose this round!
-            
-                  player score: ${playerScore}
-                  computer score: ${computerScore}`);
-            break;
-        case playerSelection === "rock" && computerSelection === "scissors":
-            playerScore++;
-            alert(
-                `${playerSelection} beats ${computerSelection}, You win this round.
-
-                player score: ${playerScore}
-                computer score: ${computerScore}`
-            );
-            break;
-        case playerSelection === "paper" && computerSelection === "rock":
-            playerScore++;
-            alert(
-                `${playerSelection} beats ${computerSelection}, You win this round.
-
-                player score: ${playerScore}
-                computer score: ${computerScore}`
-            );
-            break;
-        case playerSelection === "paper" && computerSelection === "scissors":
-            computerScore++;
-            alert(
-                `${computerSelection} beats ${playerSelection}, You loose this round!
-
-                player score: ${playerScore}
-                computer score: ${computerScore}`
-            );
-            break;
-        case playerSelection === "scissors" && computerSelection === "rock":
-            computerScore++;
-            alert(
-                `${computerSelection} beats ${playerSelection}, You loose this round!
-
-                player score: ${playerScore}
-                computer score: ${computerScore}`
-            );
-            break;
-        case playerSelection === "scissors" && computerSelection === "paper":
-            playerScore++;
-            alert(
-                `${playerSelection} beats ${computerSelection}, You win this round.
-
-                player score: ${playerScore}
-                computer score: ${computerScore}`
-            );
-            break;
-        default:
-            alert(`${computerSelection} and ${playerSelection}, It's tie!
-
-                  player score: ${playerScore}
-                  computer score: ${computerScore}`);
-            break;
+            return "paper";
+        case 3:
+            return "scissors";
     }
 };
 
-const playGame = () => {
-    while (playerScore < 5 && computerScore < 5) {
-        let userInput = prompt(
-            `Enter Your Choice:  rock  /  paper  /  scissors
+const startNewGame = () => {
+    startContainerElement.appendChild(gameContainerElement);
+    startContainerElement.removeChild(welcomeSectionElement);
+};
 
-            player score: ${playerScore}
-            computer score: ${computerScore}`
-        );
-        userInput = userInput.toLowerCase();
-        if (
-            userInput === "rock" ||
-            userInput === "paper" ||
-            userInput === "scissors"
-        ) {
-            singleRound(getComputerChoice(), userInput);
+startBtnElement.addEventListener("click", startNewGame);
+
+const finishFiveRound = () => {
+    if (roundCounter <= 0) {
+        startContainerElement.appendChild(finalSectionElement);
+        startContainerElement.removeChild(gameContainerElement);
+        if (computerScore > playerScore) {
+            finalReportElement.textContent = "Sorry, You Loose The Game!";
         } else {
-            alert("Your Input is Invalid! Try Again");
+            finalReportElement.textContent =
+                "Congratulations, You Won The Game!";
         }
     }
-    if (playerScore === 5) {
-        alert("Congrats!, You Won This Game!");
-    } else {
-        alert("Sorry, You Loose This Game!");
-    }
-    playerScore = 0;
-    computerScore = 0;
-    playGame();
 };
 
-playGame();
+const checkSelectionRock = () => {
+    const playerSelection = "rock";
+    const computerSelection = makeRandomChoice();
+    let report = "";
+    switch (true) {
+        case playerSelection === computerSelection:
+            report = "Rock And Rock, It's Tie!";
+            break;
+        case computerSelection === "paper":
+            report = "Paper Beats Rock, You Loose This Round!";
+            computerScore++;
+            roundCounter--;
+            computerScoreElement.textContent = `${computerScore}`;
+            roundCounterElement.textContent = `${roundCounter}`;
+            break;
+        case computerSelection === "scissors":
+            report = "Rock Beats Scissors, You Win This Round!";
+            playerScore++;
+            roundCounter--;
+            playerScoreElement.textContent = `${playerScore}`;
+            roundCounterElement.textContent = `${roundCounter}`;
+            break;
+    }
+    roundReportElement.textContent = report;
+    finishFiveRound();
+};
+
+rockBtnElement.addEventListener("click", checkSelectionRock);
+
+const checkSelectionPaper = () => {
+    const playerSelection = "paper";
+    const computerSelection = makeRandomChoice();
+    let report = "";
+    switch (true) {
+        case playerSelection === computerSelection:
+            report = "Paper And Paper, It's Tie!";
+            break;
+        case computerSelection === "rock":
+            report = "Paper Beats Rock, You Win This Round!";
+            playerScore++;
+            roundCounter--;
+            playerScoreElement.textContent = `${playerScore}`;
+            roundCounterElement.textContent = `${roundCounter}`;
+            break;
+        case computerSelection === "scissors":
+            report = "Scissors Beats Paper, You Loose This Round!";
+            computerScore++;
+            roundCounter--;
+            computerScoreElement.textContent = `${computerScore}`;
+            roundCounterElement.textContent = `${roundCounter}`;
+            break;
+    }
+    roundReportElement.textContent = report;
+    finishFiveRound();
+};
+
+paperBtnElement.addEventListener("click", checkSelectionPaper);
+
+const checkSelectionScissors = () => {
+    const playerSelection = "scissors";
+    const computerSelection = makeRandomChoice();
+    let report = "";
+    switch (true) {
+        case playerSelection === computerSelection:
+            report = "Scissors And Scissors, It's Tie!";
+            break;
+        case computerSelection === "rock":
+            report = "Rock Beats Scissors, You Loose This Round!";
+            computerScore++;
+            roundCounter--;
+            computerScoreElement.textContent = `${computerScore}`;
+            roundCounterElement.textContent = `${roundCounter}`;
+            break;
+        case computerSelection === "paper":
+            report = "Scissors Beats Paper, You Win This Round!";
+            playerScore++;
+            roundCounter--;
+            playerScoreElement.textContent = `${playerScore}`;
+            roundCounterElement.textContent = `${roundCounter}`;
+            break;
+    }
+    roundReportElement.textContent = report;
+    finishFiveRound();
+};
+
+scissorsBtnElement.addEventListener("click", checkSelectionScissors);
+
+const tryAgain = () => {
+    startContainerElement.appendChild(gameContainerElement);
+    startContainerElement.removeChild(finalSectionElement);
+    computerScore = 0;
+    playerScore = 0;
+    roundCounter = 5;
+    computerScoreElement.textContent = `${computerScore}`;
+    playerScoreElement.textContent = `${playerScore}`;
+    roundCounterElement.textContent = `${roundCounter}`;
+    roundReportElement.textContent = "";
+};
+
+tryAgainBtnElement.addEventListener("click", tryAgain);
